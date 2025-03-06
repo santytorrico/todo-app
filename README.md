@@ -7,3 +7,4 @@
 A responsive full stack to-do app combined with the power of llm's
 
 
+This project is not open source. All rights reserved. Unauthorized use, reproduction, or distribution is prohibited.
