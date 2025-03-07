@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
-import taskRoutes from "./routes/taskRoutes.js"
+import taskRoutes from "./routes/taskRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 //import authMiddleware from "./middleware/authMiddleware.js";
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/ai", aiRoutes);
 
 // app.get("/api/protected", authMiddleware, (req, res) => {
 //   res.json({ message: "Protected route accessed!", user: req.user });
