@@ -18,10 +18,16 @@ export const createTask = async (token: string, title: string, description: stri
   return response.data;
 };
 
-export const updateTask = async (token: string, id: number, completed: boolean) => {
+export const updateTask = async (
+  token: string,
+  id: number,
+  title: string,
+  description: string,
+  completed: boolean
+) => {
   const response = await axios.put(
     `${API_URL}/${id}`,
-    { completed },
+    { title, description, is_completed: completed },
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;

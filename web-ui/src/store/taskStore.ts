@@ -17,7 +17,7 @@ type TaskState = {
   isSummarizing: boolean;
   fetchTasks: () => Promise<void>;
   addTask: (title: string, description: string) => Promise<void>;
-  toggleTask: (id: number, completed: boolean) => Promise<void>;
+  updateTask: (id: number, title: string, description: string, completed: boolean) => Promise<void>;
   removeTask: (id: number) => Promise<void>;
   generateSummary: (selectedTaskIds?: number[]) => Promise<void>;
 };
@@ -29,28 +29,35 @@ export const useTaskStore = create<TaskState>((set, get) => {
     tasks: [],
     summary: "",
     isSummarizing: false,
+
     fetchTasks: async () => {
       if (!token) return;
       const tasks = await getTasks(token);
       set({ tasks });
     },
+
     addTask: async (title, description) => {
       if (!token) return;
       const newTask = await createTask(token, title, description);
       set((state) => ({ tasks: [...state.tasks, newTask] }));
     },
-    toggleTask: async (id, completed) => {
+
+    updateTask: async (id, title, description, completed) => {
       if (!token) return;
-      await updateTask(token, id, completed);
+      const updatedTask = await updateTask(token, id, title, description, completed);
       set((state) => ({
-        tasks: state.tasks.map((task) => (task.id === id ? { ...task, completed } : task)),
+        tasks: state.tasks.map((task) =>
+          task.id === id ? { ...task, title, description, completed } : task
+        ),
       }));
     },
+
     removeTask: async (id) => {
       if (!token) return;
       await deleteTask(token, id);
       set((state) => ({ tasks: state.tasks.filter((task) => task.id !== id) }));
     },
+
     generateSummary: async (selectedTaskIds) => {
       if (!token) return;
       

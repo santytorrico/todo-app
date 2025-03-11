@@ -29,6 +29,12 @@ const Login = () => {
           <input className="border p-2 rounded" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</button>
         </form>
+        <p className="mt-4 text-sm text-gray-600">
+          Don't have an account?{" "}
+          <button onClick={() => navigate("/signup")} className="text-blue-500 underline">
+            Sign up here
+          </button>
+        </p>
       </div>
     </div>
   );
