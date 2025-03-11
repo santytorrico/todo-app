@@ -9,10 +9,10 @@ export const getTasks = async (token: string) => {
   return response.data;
 };
 
-export const createTask = async (token: string, title: string) => {
+export const createTask = async (token: string, title: string, description: string ) => {
   const response = await axios.post(
     API_URL,
-    { title },
+    { title, description },
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
