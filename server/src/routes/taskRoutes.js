@@ -40,14 +40,23 @@ router.put("/:id", authMiddleware, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const updatedTask = await pool.query(
-      "UPDATE tasks SET title = $1, description = $2, is_completed = $3 WHERE id = $4 AND user_id = $5 RETURNING *",
-      [title, description, is_completed, id, userId]
-    );
+    // Fetch the existing task from the database
+    const existingTask = await pool.query("SELECT * FROM tasks WHERE id = $1 AND user_id = $2", [id, userId]);
 
-    if (updatedTask.rows.length === 0) {
+    if (existingTask.rows.length === 0) {
       return res.status(404).json({ message: "Task not found or unauthorized" });
     }
+
+    // Use existing values if new values are not provided
+    const updatedTitle = title !== undefined ? title : existingTask.rows[0].title;
+    const updatedDescription = description !== undefined ? description : existingTask.rows[0].description;
+    const updatedIsCompleted = is_completed !== undefined ? is_completed : existingTask.rows[0].is_completed;
+
+    // Update the task
+    const updatedTask = await pool.query(
+      "UPDATE tasks SET title = $1, description = $2, is_completed = $3 WHERE id = $4 AND user_id = $5 RETURNING *",
+      [updatedTitle, updatedDescription, updatedIsCompleted, id, userId]
+    );
 
     res.json(updatedTask.rows[0]);
   } catch (error) {
