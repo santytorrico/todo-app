@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_URL = `${import.meta.env.VITE_API_BASE_URL || "todo-app-production-e398.up.railway.app"}/api/auth`;
 
 const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
 });
 
