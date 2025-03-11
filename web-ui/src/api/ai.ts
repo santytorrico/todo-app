@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL || "todo-app-production-e398.up.railway.app"}/api/auth`;
+const API_URL = `${import.meta.env.VITE_API_BASE_URL || "todo-app-production-e398.up.railway.app"}/api/ai`;
 
 export const getTasksSummary = async (token: string, tasks: any[]) => {
   const response = await axios.post(
