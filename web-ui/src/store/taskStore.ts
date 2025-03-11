@@ -44,7 +44,7 @@ export const useTaskStore = create<TaskState>((set, get) => {
 
     updateTask: async (id, title, description, completed) => {
       if (!token) return;
-      const updatedTask = await updateTask(token, id, title, description, completed);
+      await updateTask(token, id, title, description, completed);
       set((state) => ({
         tasks: state.tasks.map((task) =>
           task.id === id ? { ...task, title, description, completed } : task
