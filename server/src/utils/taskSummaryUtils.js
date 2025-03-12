@@ -18,7 +18,7 @@ export const generateSummary = async (content) => {
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const currentDate = now.toLocaleDateString();
         const currentTime = now.toLocaleTimeString();
-        const prompt = `Summarize these to do tasks in a concise paragraph (max 3 sentences), suggest a schedule to complete them, use as context Current Date: ${currentDate}, Current Time: ${currentTime}(${timeOfDay}, ${timezone}). : ${content}`;
+        const prompt = `Summarize these to do tasks in a concise paragraph (max 3 sentences), suggest a schedule to complete them, use as context Current Date: ${currentDate}, Current Time: ${currentTime}(${timeOfDay}, ${timezone}). Always start the schedule part with 'Suggested schedule: ' ${content}`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
