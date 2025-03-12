@@ -20,29 +20,31 @@ type TaskState = {
   updateTask: (id: number, title: string, description: string, completed: boolean) => Promise<void>;
   removeTask: (id: number) => Promise<void>;
   generateSummary: (selectedTaskIds?: number[]) => Promise<void>;
+  clearTasks: () => void;
 };
 
 export const useTaskStore = create<TaskState>((set, get) => {
-  const token = useAuthStore.getState().token;
-
   return {
     tasks: [],
     summary: "",
     isSummarizing: false,
 
     fetchTasks: async () => {
+      const token = useAuthStore.getState().token;
       if (!token) return;
       const tasks = await getTasks(token);
       set({ tasks });
     },
 
     addTask: async (title, description) => {
+      const token = useAuthStore.getState().token;
       if (!token) return;
       const newTask = await createTask(token, title, description);
       set((state) => ({ tasks: [...state.tasks, newTask] }));
     },
 
     updateTask: async (id, title, description, completed) => {
+      const token = useAuthStore.getState().token;
       if (!token) return;
       await updateTask(token, id, title, description, completed);
       set((state) => ({
@@ -53,14 +55,15 @@ export const useTaskStore = create<TaskState>((set, get) => {
     },
 
     removeTask: async (id) => {
+      const token = useAuthStore.getState().token;
       if (!token) return;
       await deleteTask(token, id);
       set((state) => ({ tasks: state.tasks.filter((task) => task.id !== id) }));
     },
 
     generateSummary: async (selectedTaskIds) => {
+      const token = useAuthStore.getState().token;
       if (!token) return;
-      
       set({ isSummarizing: true });
       try {
         const { tasks } = get();
@@ -79,6 +82,9 @@ export const useTaskStore = create<TaskState>((set, get) => {
         console.error("Error generating summary:", error);
         set({ summary: "Failed to generate summary", isSummarizing: false });
       }
+    },
+    clearTasks: () => {
+      set({ tasks: [] , summary: "" });
     }
   };
 });

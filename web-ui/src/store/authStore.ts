@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useTaskStore } from "./taskStore";
 
 type AuthState = {
   token: string | null;
@@ -21,7 +22,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     localStorage.removeItem("token");
     set({ token: null });
-
+    setTimeout(() => {
+      if (useTaskStore.getState().clearTasks) {
+        useTaskStore.getState().clearTasks();
+      }
+    }, 0);
     window.dispatchEvent(new StorageEvent("storage", { key: "token", newValue: null }));
   },
 }));
@@ -29,5 +34,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 window.addEventListener("storage", (event) => {
   if (event.key === "token") {
     useAuthStore.setState({ token: event.newValue });
+    setTimeout(() => {
+      if (useTaskStore.getState().clearTasks) {
+        useTaskStore.getState().clearTasks();
+      }
+    }, 0);
   }
 });
