@@ -5,9 +5,9 @@ import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 //import authMiddleware from "./middleware/authMiddleware.js";
-
-dotenv.config();
-
+if(process.env.NODE_ENV !== "production"){
+  dotenv.config();
+}
 const app = express();
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
@@ -17,6 +17,9 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("API is running...");
+});
+app.get("/health", (_, res) => {
+  res.status(200).send("ok")
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);

@@ -5,6 +5,7 @@ import pool from "../config/db.js";
 
 const router = express.Router();
 
+//Sign up Route
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -45,6 +46,27 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.json({ user: { id: user.rows[0].id, name: user.rows[0].name, email: user.rows[0].email }, token });
   } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+});
+
+//Forgot Password Route
+router.post("/forgot-password", async (req,res) => {
+  const {email} = req.body;
+  try{
+    if(!email){
+      return res.status(204).json({message : "No content found"});
+    }
+    const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    if(user.rows.length === 0){
+      return res.status(400).json({ message: "A password reset link will be sent to this email if an account is registered under it."});
+    }
+    const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "15m"})
+    res.status(400).json({ message: "A password reset link will be sent to this email if an account is registered under it.", token});
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`
+    console.log(resetLink);
+    // const salt = await pool.query("INSERT INTO")
+  }catch(error){
     res.status(500).json({ message: "Server error", error });
   }
 });

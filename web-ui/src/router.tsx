@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import { JSX } from "react";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const token = useAuthStore((state) => state.token);
@@ -18,6 +19,7 @@ const AppRouter = () => {
       <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route
           path="/dashboard"
           element={
