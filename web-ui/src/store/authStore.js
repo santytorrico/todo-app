@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { useTaskStore } from "./taskStore";
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create((set) => ({
   token: localStorage.getItem("token"),
   setToken: (token) => {
     if (token) {
