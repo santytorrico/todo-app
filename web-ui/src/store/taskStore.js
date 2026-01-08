@@ -4,7 +4,7 @@ import { getTasks, createTask, updateTask, deleteTask } from "../api/tasks";
 import { getTasksSummary } from "../api/ai";
 import { useAuthStore } from "./authStore";
 
-export const useTaskStore = create<TaskState>((set, get) => {
+export const useTaskStore = create((set, get) => {
   return {
     tasks: [],
     summary: "",
