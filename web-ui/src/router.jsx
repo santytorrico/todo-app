@@ -4,10 +4,10 @@ import { useAuthStore } from "./store/authStore";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import { JSX } from "react";
+// import { JSX } from "react";
 import ForgotPassword from "./pages/ForgotPassword";
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }) => {
   const token = useAuthStore((state) => state.token);
   return token ? children : <Navigate to="/login" />;
 };

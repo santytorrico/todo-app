@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ children }: { children: React.ReactNode }) => {
+const Navbar = ({ children }) => {
     const { logout } = useAuthStore();
     const navigate = useNavigate();
 

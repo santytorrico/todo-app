@@ -2,32 +2,26 @@ import { useState } from "react";
 import { useTaskStore } from "../store/taskStore";
 import { Task } from "../store/taskStore";
 
-type TaskListProps = {
-  selectionMode: boolean;
-  selectedTasks: Record<number, boolean>;
-  toggleTaskSelection: (taskId: number) => void;
-};
-
-export const TaskList = ({ selectionMode, selectedTasks, toggleTaskSelection }: TaskListProps) => {
+export const TaskList = ({ selectionMode, selectedTasks, toggleTaskSelection }) => {
   const { tasks, updateTask, removeTask } = useTaskStore();
-  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
 
-  const handleEdit = (task: Task) => {
+  const handleEdit = (task) => {
     setEditingTaskId(task.id);
     setEditedTitle(task.title);
     setEditedDescription(task.description);
   };
 
-  const handleSave = async (id: number) => {
+  const handleSave = async (id) => {
     await updateTask(id, editedTitle, editedDescription, false); // Pass `false` for `completed` if not changing
     setEditingTaskId(null);
   };
   const handleCancel = () => {
     setEditingTaskId(null); // Exit editing mode without saving
   };
-  const handleToggleComplete = async (id: number, completed: boolean) => {
+  const handleToggleComplete = async (id, completed) => {
     const task = tasks.find((task) => task.id === id);
     if (task) {
       await updateTask(id, task.title, task.description, !completed);

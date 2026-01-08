@@ -4,25 +4,6 @@ import { getTasks, createTask, updateTask, deleteTask } from "../api/tasks";
 import { getTasksSummary } from "../api/ai";
 import { useAuthStore } from "./authStore";
 
-export type Task = {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-};
-
-type TaskState = {
-  tasks: Task[];
-  summary: string;
-  isSummarizing: boolean;
-  fetchTasks: () => Promise<void>;
-  addTask: (title: string, description: string) => Promise<void>;
-  updateTask: (id: number, title: string, description: string, completed: boolean) => Promise<void>;
-  removeTask: (id: number) => Promise<void>;
-  generateSummary: (selectedTaskIds?: number[]) => Promise<void>;
-  clearTasks: () => void;
-};
-
 export const useTaskStore = create<TaskState>((set, get) => {
   return {
     tasks: [],

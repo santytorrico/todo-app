@@ -9,7 +9,7 @@ const Login = () => {
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const data = await login(email, password);

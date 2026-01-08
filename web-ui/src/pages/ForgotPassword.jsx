@@ -5,7 +5,7 @@ const ForgotPassword = () =>{
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   
-  const handleForgotpassword = async (e: React.FormEvent) => {
+  const handleForgotpassword = async (e) => {
     alert("Function triggered!");
     e.preventDefault();
   };

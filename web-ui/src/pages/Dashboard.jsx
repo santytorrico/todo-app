@@ -4,11 +4,18 @@ import { useAuthStore } from "../store/authStore";
 import { TaskList } from "../components/Tasklist";
 
 const Dashboard = () => {
-  const { tasks, summary, isSummarizing, fetchTasks, addTask, generateSummary } = useTaskStore();
+  const { 
+    tasks, 
+    summary, 
+    isSummarizing, 
+    fetchTasks,
+    addTask,
+    generateSummary, 
+  } = useTaskStore();
   const { token } = useAuthStore();
   const [newTask, setNewTask] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [selectedTasks, setSelectedTasks] = useState<Record<number, boolean>>({});
+  const [selectedTasks, setSelectedTasks] = useState({});
   const [selectionMode, setSelectionMode] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
 
@@ -38,7 +45,7 @@ const Dashboard = () => {
     generateSummary(selectedTaskIds);
   };
 
-  const toggleTaskSelection = (taskId: number) => {
+  const toggleTaskSelection = (taskId) => {
     setSelectedTasks(prev => ({
       ...prev,
       [taskId]: !prev[taskId]
