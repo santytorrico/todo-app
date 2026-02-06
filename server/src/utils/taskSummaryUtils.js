@@ -26,7 +26,7 @@ export const generateSummary = async (content) => {
         text = text.replace(/[*_`]/g, "").trim();
         return text || "Could not generate summary.";
     } catch (error) {
-        console.error("Gemini Summary Error:", error);
-        return "Summary generation failed.";
+        console.error("Gemini Error Details:", error.message); 
+        return `Summary generation failed: ${error.message}`;
     }
 };
