@@ -11,7 +11,7 @@ export const generateSummary = async (content) => {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const now = new Date();
         const hour = now.getHours();
         let timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
