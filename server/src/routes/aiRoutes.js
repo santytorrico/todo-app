@@ -52,9 +52,6 @@ router.post("/combined-summary-stream", authMiddleware, async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Accel-Buffering', 'no'); // Disable buffering for nginx/render
     
-    // Important: flush headers immediately
-    res.flushHeaders();
-    
     try {
         const combinedText = tasks
             .map(task => {
