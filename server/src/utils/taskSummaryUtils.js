@@ -30,3 +30,34 @@ export const generateSummary = async (content) => {
         return `Summary generation failed: ${error.message}`;
     }
 };
+
+export const generateSummaryStream = async (content, onChunk) => {
+    if (!content || content.trim() === "") {
+        onChunk("No content provided.");
+        return;
+    }
+
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const now = new Date();
+        const hour = now.getHours();
+        let timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const currentDate = now.toLocaleDateString();
+        const currentTime = now.toLocaleTimeString();
+        const prompt = `Summarize these to do tasks in a concise paragraph (max 3 sentences), suggest a schedule to complete them, use as context Current Date: ${currentDate}, Current Time: ${currentTime}(${timeOfDay}, ${timezone}). Always start the schedule part with 'Suggested schedule: ' ${content}`;
+
+        const result = await model.generateContentStream(prompt);
+        
+        // Stream each chunk as it arrives
+        for await (const chunk of result.stream) {
+            const chunkText = chunk.text();
+            // Remove markdown formatting characters
+            const cleanText = chunkText.replace(/[*_`]/g, "");
+            onChunk(cleanText);
+        }
+    } catch (error) {
+        console.error("Gemini Streaming Error:", error.message);
+        onChunk(`Summary generation failed: ${error.message}`);
+    }
+};

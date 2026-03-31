@@ -142,7 +142,7 @@ const Dashboard = () => {
         </div>
       )}
 
-      {summary && !isSummarizing && (
+      {summary && (
         <div className="w-full mb-4 bg-white rounded-lg border border-blue-200 shadow-sm overflow-hidden">
           <div className="bg-blue-50 px-4 py-2 border-b border-blue-200">
             <h3 className="font-medium text-blue-800 flex items-center">
@@ -157,6 +157,7 @@ const Dashboard = () => {
               <>
                 <div className="text-sm md:text-base mb-4">
                   {summary.split("Suggested schedule:")[0]}
+                  {isSummarizing &&<span className="typing-cursor">▊</span>}
                 </div>
                 <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
                   <h4 className="font-medium text-green-800 mb-2 flex items-center">
@@ -171,7 +172,10 @@ const Dashboard = () => {
                 </div>
               </>
             ) : (
-              <p className="text-sm md:text-base">{summary}</p>
+              <p className="text-sm md:text-base">
+                {summary}
+                {isSummarizing && <span className="typing-cursor">▊</span>}
+              </p>
             )}
           </div>
         </div>

@@ -45,7 +45,7 @@ export const useTaskStore = create((set, get) => {
     generateSummary: async (selectedTaskIds) => {
       const token = useAuthStore.getState().token;
       if (!token) return;
-      set({ isSummarizing: true });
+      set({ isSummarizing: true, summary: "" });
       try {
         const { tasks } = get();
         const tasksToSummarize = selectedTaskIds 
@@ -56,9 +56,30 @@ export const useTaskStore = create((set, get) => {
           set({ summary: "No tasks selected for summary", isSummarizing: false });
           return;
         }
-        
-        const summary = await getTasksSummary(token, tasksToSummarize);
-        set({ summary, isSummarizing: false });
+        getTasksSummaryStream(
+          token,
+          tasksToSummarize,
+          // onChunk - append each chunk to summary
+          (chunk) => {
+            set((state) => ({ 
+              summary: state.summary + chunk 
+            }));
+          },
+          // onComplete - streaming finished
+          () => {
+            set({ isSummarizing: false });
+          },
+          // onError - handle errors
+          (error) => {
+            console.error("Error generating summary:", error);
+            set({ 
+              summary: "Failed to generate summary: " + error.message, 
+              isSummarizing: false 
+            });
+          }
+        );
+        // const summary = await getTasksSummary(token, tasksToSummarize);
+        // set({ summary, isSummarizing: false });
       } catch (error) {
         console.error("Error generating summary:", error);
         set({ summary: "Failed to generate summary", isSummarizing: false });
