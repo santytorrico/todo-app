@@ -130,7 +130,7 @@ const Dashboard = () => {
       </div>
 
       {/* Summary Display */}
-      {isSummarizing && (
+      {/* {isSummarizing && (
         <div className="w-full mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
           <div className="flex items-center justify-center">
             <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -140,7 +140,7 @@ const Dashboard = () => {
             <span>Generating AI summary...</span>
           </div>
         </div>
-      )}
+      )} */}
 
       {summary && (
         <div className="w-full mb-4 bg-white rounded-lg border border-blue-200 shadow-sm overflow-hidden">
