@@ -1,5 +1,5 @@
 import express from "express";
-import { generateSummary } from "../utils/taskSummaryUtils.js";
+import { generateSummary, generateSummaryStream } from "../utils/taskSummaryUtils.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
