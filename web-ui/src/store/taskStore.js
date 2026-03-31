@@ -1,7 +1,7 @@
 // store/taskStore.ts
 import { create } from "zustand";
 import { getTasks, createTask, updateTask, deleteTask } from "../api/tasks";
-import { getTasksSummary } from "../api/ai";
+import { getTasksSummary, getTasksSummaryStream } from "../api/ai";
 import { useAuthStore } from "./authStore";
 
 export const useTaskStore = create((set, get) => {
