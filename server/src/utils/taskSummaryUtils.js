@@ -54,7 +54,15 @@ export const generateSummaryStream = async (content, onChunk) => {
             const chunkText = chunk.text();
             // Remove markdown formatting characters
             const cleanText = chunkText.replace(/[*_`]/g, "");
-            onChunk(cleanText);
+
+            const words = cleanText.split(/(\s+)/);
+            for(const word of words){
+                if(word){
+                    onChunk(word);
+                    await new Promise(resolve => setTimeout(resolve, 30));
+                }
+            }
+            // onChunk(cleanText);
         }
     } catch (error) {
         console.error("Gemini Streaming Error:", error.message);
