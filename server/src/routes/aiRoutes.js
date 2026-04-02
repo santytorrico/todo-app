@@ -52,9 +52,7 @@ router.post("/combined-summary-stream", authMiddleware, async (req, res) => {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Accel-Buffering', 'no');
     res.flushHeaders();
-
-    res.write(`data: ${JSON.stringify({chunk: "", done: false})}\n\n`)
-
+    
     try {
         const combinedText = tasks
             .map(task => {

@@ -4,10 +4,6 @@ import { getTasks, createTask, updateTask, deleteTask } from "../api/tasks";
 import { getTasksSummary, getTasksSummaryStream } from "../api/ai";
 import { useAuthStore } from "./authStore";
 
-
-let summaryUpdateTimeout = null;
-let pendingSummaryChunks = "";
-
 export const useTaskStore = create((set, get) => {
   return {
     tasks: [],
@@ -49,17 +45,7 @@ export const useTaskStore = create((set, get) => {
     generateSummary: async (selectedTaskIds) => {
       const token = useAuthStore.getState().token;
       if (!token) return;
-
-      if (summaryUpdateTimeout) {
-        clearTimeout(summaryUpdateTimeout);
-        summaryUpdateTimeout = null;
-      }
-      pendingSummaryChunks = "";
-
       set({ isSummarizing: true, summary: "" });
-
-      await new Promise(resolve => setTimeout(resolve, 0));
-
       try {
         const { tasks } = get();
         const tasksToSummarize = selectedTaskIds 
@@ -75,38 +61,16 @@ export const useTaskStore = create((set, get) => {
           tasksToSummarize,
           // onChunk - append each chunk to summary
           (chunk) => {
-            pendingSummaryChunks += chunk;
-
-            if(summaryUpdateTimeout){
-              clearTimeout(summaryUpdateTimeout);
-            }
-
-            summaryUpdateTimeout = setTimeout(()=>{
-              set((state) => ({ 
-                summary: state.summary + pendingSummaryChunks 
-              }));
-              pendingSummaryChunks = "";
-            }, 16);
+            set((state) => ({ 
+              summary: state.summary + chunk
+            }));
           },
           // onComplete - streaming finished
           () => {
-            if(summaryUpdateTimeout){
-              clearTimeout(summaryUpdateTimeout);
-            }
-            if(pendingSummaryChunks){
-              set((state) => ({
-                summary: state.summary + pendingSummaryChunks
-              }));
-              pendingSummaryChunks = "";
-            }
             set({ isSummarizing: false });
           },
           // onError - handle errors
           (error) => {
-            if(summaryUpdateTimeout){
-              clearTimeout(summaryUpdateTimeout);
-            }
-            pendingSummaryChunks = "";
             console.error("Error generating summary:", error);
             set({ 
               summary: "Failed to generate summary: " + error.message, 
