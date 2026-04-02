@@ -13,7 +13,6 @@ export const getTasksSummary = async (token, tasks) => {
 };
 
 export const getTasksSummaryStream = (token, tasks, onChunk, onComplete, onError) => {
-  // Create a POST request manually since EventSource only supports GET
   fetch(`${API_URL}/combined-summary-stream`, {
     method: 'POST',
     headers: {
@@ -34,6 +33,9 @@ export const getTasksSummaryStream = (token, tasks, onChunk, onComplete, onError
     const processStream = () => {
       reader.read().then(({ done, value }) => {
         if (done) {
+          if(buffer.trim()){
+            processLine(buffer);
+          }
           onComplete();
           return;
         }
@@ -43,34 +45,69 @@ export const getTasksSummaryStream = (token, tasks, onChunk, onComplete, onError
         
         // Split by newlines to get individual SSE messages
         const lines = buffer.split('\n');
-        buffer = lines.pop(); // Keep incomplete line in buffer
-
-        lines.forEach(line => {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
+        buffer = lines.pop() || ''; // Keep incomplete line in buffer
+        for(const line of lines){
+          processLine(line);
+        }
+        // lines.forEach(line => {
+        //   if (line.startsWith('data: ')) {
+        //     try {
+        //       const data = JSON.parse(line.slice(6));
               
-              if (data.error) {
-                onError(new Error(data.chunk));
-                return;
-              }
+        //       if (data.error) {
+        //         onError(new Error(data.chunk));
+        //         return;
+        //       }
               
-              if (data.done) {
-                onComplete();
-              } else if (data.chunk) {
-                onChunk(data.chunk);
-              }
-            } catch (e) {
-              console.error('Error parsing SSE data:', e);
-            }
-          }
-        });
+        //       if (data.done) {
+        //         onComplete();
+        //       } else if (data.chunk) {
+        //         onChunk(data.chunk);
+        //       }
+        //     } catch (e) {
+        //       console.error('Error parsing SSE data:', e);
+        //     }
+        //   }
+        // });
 
         processStream();
-      }).catch(onError);
+      }).catch(error => {
+        console.error('Stream read error:', error);
+        onError(error);
+      });
     };
+    const processLine = (line) => {
+      const trimmedLine = line.trim();
+      if (!trimmedLine || !trimmedLine.startsWith('data: ')) {
+        return;
+      }
+
+      const dataStr = trimmedLine.slice(6).trim();
+      if (!dataStr) return;
+
+      try {
+        const data = JSON.parse(dataStr);
+        
+        if (data.error) {
+          onError(new Error(data.chunk || 'Unknown error'));
+          return;
+        }
+        
+        if (data.done) {
+          onComplete();
+        } else if (data.chunk) {
+          onChunk(data.chunk);
+        }
+      } catch (e) {
+        console.error('Error parsing SSE data:', e, 'Line:', dataStr);
+      }
+    };
+
 
     processStream();
   })
-  .catch(onError);
+  .catch(error => {
+    console.error('Fetch error:', error);
+    onError(error);
+  });
 };
