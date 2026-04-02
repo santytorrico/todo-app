@@ -38,7 +38,7 @@ export const generateSummaryStream = async (content, onChunk) => {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-3-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
         const now = new Date();
         const hour = now.getHours();
         let timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
