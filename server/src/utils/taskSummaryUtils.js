@@ -38,7 +38,7 @@ export const generateSummaryStream = async (content, onChunk) => {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3-flash-lite-preview" });
         const now = new Date();
         const hour = now.getHours();
         let timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
@@ -52,7 +52,6 @@ export const generateSummaryStream = async (content, onChunk) => {
         // Stream each chunk as it arrives
         for await (const chunk of result.stream) {
             const chunkText = chunk.text();
-            // Remove markdown formatting characters
             const cleanText = chunkText.replace(/[*_`]/g, "");
              const words = cleanText.split(/(\s+)/);
             for(const word of words){
